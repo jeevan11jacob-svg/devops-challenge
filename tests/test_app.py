@@ -13,3 +13,14 @@ def test_health():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json == {"status": "UP"}
+
+def test_api_info():
+    client = app.test_client()
+    response = client.get("/api/info")
+
+    assert response.status_code == 200
+    assert response.json == {
+        "project": "DevOps Mastery Challenge",
+        "version": "1.0",
+        "framework": "Flask"
+    }

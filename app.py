@@ -11,7 +11,13 @@ def home():
 @app.route("/health")
 def health():
     return jsonify({"status": "UP"})
-
+@app.route("/api/info")
+def api_info():
+    return jsonify({
+        "project": "DevOps Mastery Challenge",
+        "version": "1.0",
+        "framework": "Flask"
+    })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
