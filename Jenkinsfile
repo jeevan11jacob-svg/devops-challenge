@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "jeevanjacob/devops-challenge"
+        IMAGE_NAME = "jeevanjacob11/devops-challenge"
     }
 
     stages {
@@ -24,7 +24,22 @@ pipeline {
 
         stage('Build & Push') {
             steps {
-                echo 'Docker build and push will be configured with Jenkins credentials.'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKERHUB_USER',
+                    passwordVariable: 'DOCKERHUB_TOKEN'
+                )]) {
+                    sh '''
+                        set +x
+                        echo "$DOCKERHUB_TOKEN" | docker login \
+                            --username "$DOCKERHUB_USER" \
+                            --password-stdin
+
+                        docker build -t "$IMAGE_NAME:latest" .
+                        docker push "$IMAGE_NAME:latest"
+                        docker logout
+                    '''
+                }
             }
         }
     }
